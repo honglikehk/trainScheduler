@@ -6,6 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Train Scheduler</title>
 
+      <!-- Added Moment JS -->
+  <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+
+    <!-- firebase-->
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+
     <!-- Latest compiled and minified CSS -->
     <link
       rel="stylesheet"
@@ -52,28 +58,7 @@
                   <th>Minutes Away</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>Trenton Express</td>
-                  <td>Trenton</td>
-                  <td>25</td>
-                  <td>05:35PM</td>
-                  <td>10</td>
-                </tr>
-                <tr>
-                  <td>Oregon Trail</td>
-                  <td>Salem, Oregon</td>
-                  <td>3600</td>
-                  <td>01:39PM</td>
-                  <td>1154</td>
-                </tr>
-                <tr>
-                  <td>Midnight Carriage</td>
-                  <td>Philadelpha</td>
-                  <td>15</td>
-                  <td>05:35PM</td>
-                  <td>10</td>
-                </tr>
+              <tbody class="spreadsheet">
               </tbody>
             </table>
           </div>
@@ -92,6 +77,7 @@
             <div class="panel-body">
                 <form role="form">
                         <div class="form-group">
+
                                 <label for="searchName">Train Name:</label>
                                 <input type="text" class="form-control" id="searchName">
                               </div>
@@ -107,7 +93,8 @@
                                       <label for="searchFreq">Frequency: (min)</label>
                                       <input type="text" class="form-control" id="searchFreq">
                                     </div>
-                              <button type="submit" id="searchBtn" class="btn btn-default">Search</button>
+                              <button type="submit" id="submitBtn" class="btn btn-default">Submit</button>
+                              <button type="submit" id="clearBtn" class="btn btn-default">Clear</button>
                             </form>
                 </form>
             </div>
