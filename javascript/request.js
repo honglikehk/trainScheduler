@@ -1,6 +1,4 @@
-// alert("yay!");
 $(document).ready(function() {
-  // Your web app's Firebase configuration
   let config = {
     apiKey: "AIzaSyDEtkQJUtK_1PcNFWIsnhZBRq5eK1OXR3c",
     authDomain: "food-passion-1491771293897.firebaseapp.com",
@@ -35,7 +33,7 @@ $(document).ready(function() {
       .val()
       .trim();
 
-    database.ref().push({
+    database.ref("/trains").push({
       trainName: trainName,
       destination: destination,
       firstTrain: firstTrain,
@@ -54,14 +52,40 @@ $(document).ready(function() {
     frequency.empty();
   });
 
+  let tFrequency;
+  let firstTime = "00:00";
+
+  let setTime = function(train) {
+    // First Time (pushed back 1 year to make sure it comes before current time)
+    let firstTimeConverted = moment(firstTime, "HH:mm").subtract(1, "years");
+
+    // Difference between the times
+    let diffTime = moment().diff(moment(firstTimeConverted), "minutes");
+
+    // Time apart (remainder)
+    let tRemainder = diffTime % tFrequency;
+
+    // Minute Until Train
+    let tMinutesTillTrain = tFrequency - tRemainder;
+
+    // Next Train
+    let nextTrain = moment().add(tMinutesTillTrain, "minutes");
+
+    train.minAway = tMinutesTillTrain;
+    train.nextArrival = moment(nextTrain).format("hh:mm");
+  };
+
   database
-    .ref()
+    .ref("/trains")
     .orderByChild("dateAdded")
     .on("child_added", function(snapshot) {
       $(".spreadsheet").append(
-        `<tr><td>${snapshot.val().trainName}</td><td>${
-          snapshot.val().destination
-        }</td><td>${snapshot.val().frequency}</td></tr>`
+        `<tr><td>${snapshot.val().trainName}</td>
+        <td>${snapshot.val().destination}</td>
+        <td>${snapshot.val().frequency}</td>
+        <td>${snapshot.val().nextArrival}</td>
+       <td>${snapshot.val().minAway} mins away</td>
+        </tr>`
       );
     });
 });
