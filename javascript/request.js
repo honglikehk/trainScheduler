@@ -13,35 +13,43 @@ $(document).ready(function() {
 
   let database = firebase.database();
 
-  let trainName = "";
-  let destination = "";
-  let firstTrain = 0;
-  let frequency = 0;
+  // let trainName = "";
+  // let destination = "";
+  // let firstTrain = 0;
+  // let frequency = 0;
 
   $("#submitBtn").on("click", function(event) {
     event.preventDefault();
-    trainName = $("#searchName")
-      .val()
-      .trim();
-    destination = $("#searchDes")
-      .val()
-      .trim();
-    firstTrain = $("#searchTime")
-      .val()
-      .trim();
-    frequency = $("#searchFreq")
-      .val()
-      .trim();
 
-    database.ref("/trains").push({
-      trainName: trainName,
-      destination: destination,
-      firstTrain: firstTrain,
-      frequency: frequency,
-      dateAdded: firebase.database.ServerValue.TIMESTAMP
-    });
+    let train = {
+      trainName: $("#searchName")
+        .val()
+        .trim(),
+      destination: $("#searchDes")
+        .val()
+        .trim(),
+      firstTrain: $("#searchTime")
+        .val()
+        .trim(),
+      frequency: $("#searchFreq")
+        .val()
+        .trim()
+    };
+    // trainName = $("#searchName")
+    //   .val()
+    //   .trim();
+    // destination = $("#searchDes")
+    //   .val()
+    //   .trim();
+    // firstTrain = $("#searchTime")
+    //   .val()
+    //   .trim();
+    // frequency = $("#searchFreq")
+    //   .val()
+    //   .trim();
+    setTime(train);
 
-    console.log(firstTimeConverted());
+    database.ref("/trains").push(train);
   });
 
   $("#clearBtn").on("click", function() {
@@ -52,21 +60,21 @@ $(document).ready(function() {
     frequency.empty();
   });
 
-  let tFrequency;
-  let firstTime = "00:00";
-
   let setTime = function(train) {
     // First Time (pushed back 1 year to make sure it comes before current time)
-    let firstTimeConverted = moment(firstTime, "HH:mm").subtract(1, "years");
+    let firstTimeConverted = moment(train.firstTrain, "HH:mm").subtract(
+      1,
+      "years"
+    );
 
     // Difference between the times
     let diffTime = moment().diff(moment(firstTimeConverted), "minutes");
 
     // Time apart (remainder)
-    let tRemainder = diffTime % tFrequency;
+    let tRemainder = diffTime % train.frequency;
 
     // Minute Until Train
-    let tMinutesTillTrain = tFrequency - tRemainder;
+    let tMinutesTillTrain = train.frequency - tRemainder;
 
     // Next Train
     let nextTrain = moment().add(tMinutesTillTrain, "minutes");
